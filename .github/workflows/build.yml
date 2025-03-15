@@ -1,31 +1,37 @@
 name: Build
 
 on:
-    push:
-        branches: [main]
+  push:
+    branches: [main]
 
 jobs:
-    build:
-        runs-on: windows-latest
+  build:
+    runs-on: windows-latest
 
-        steps:
-            - name: Check out repository
-              uses: actions/checkout@v4
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
 
-            - name: Add MSBuild to path
-              uses: microsoft/setup-msbuild@v2
+      - name: Add MSBuild to path
+        uses: microsoft/setup-msbuild@v2
 
-            - name: Build
-              run: .\build.bat
+      - name: Build
+        run: .\build.bat
 
-            - name: Create portable artifact
-              uses: actions/upload-artifact@v4
-              with:
-                  name: portable
-                  path: build/Debug/install-test.exe
+      - name: Create executable artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: Standalone executable
+          path: build/Debug/install-test.exe
 
-            - name: Create installer artifact
-              uses: actions/upload-artifact@v4
-              with:
-                  name: installer
-                  path: build/install-test-*-win64.exe
+      - name: Create NSIS installer artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: NSIS installer
+          path: build_nsis/install-test-*-win64.exe
+
+      - name: Create WIX installer artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: WIX installer
+          path: build_wix/install-test-*-win64.msi
